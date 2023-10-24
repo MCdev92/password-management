@@ -6,7 +6,7 @@ Fullstack password management web application built on Python using "Flask" for 
 
 ### Prerequisites
 * Python 3.7+ -> https://www.python.org/downloads/
-* 
+* Flask
 * React -> https://react.dev/learn/installation
 * 
 * SQLite --> https://www.sqlite.org/download.html
