@@ -1,6 +1,6 @@
 # password-management 📝🔒
 
-Fullstack password management web application built on Python using "Flask" for the backend and "ReactJS" for the frontend. This is a personal project that I use to help me securely store my passwords. This project uses SQLite as a relational database to establish the connection port from the SQLite application to the flask application.
+Fullstack password management web application built on Python using "Flask" for the backend and "ReactJS" for the frontend. This is a personal project that I use to help me securely store my passwords. This project uses SQLite as a relational database to establish the connection port from the SQLite application to the flask application. Additionally, the application will have Flask-Bcrypt for password security.
 
 ## Installation 🏗️
 
@@ -19,6 +19,10 @@ Fullstack password management web application built on Python using "Flask" for 
    `source env/bin/activate` 
 4. Install project dependencies:
    `npm install axios`
+   `pip install Flask-Bcrypt`
+   `pip install Flask-RESTful`
+   `pip install SQLAlchemy`
+   `pip install Flask   `   
 5. Run the app
     (backend): `python main.py` 
     (frontend):`react App.js` 
