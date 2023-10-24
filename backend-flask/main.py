@@ -99,9 +99,7 @@ class PasswordRes(Resource):
         return jsonify({"message": "Password deleted successfully"})
 
 
-api.add_resource(PasswordRes, '/passwords')
-
-@app.route('/passwords')
+@app.route('/')
 def index():
     return "Welcome to your password manager!"
 
