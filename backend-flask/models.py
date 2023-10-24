@@ -1,11 +1,11 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+from database import Base
+from sqlalchemy import Column, Integer, String
 
-URL_DATABASE = 'sqlite:///./password-manegement.db'
-
-engine = create_engine(URL_DATABASE, connect_args={"check_same_thread": False})
-
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-Base = declarative_base()
+class Passwords(Base):
+    __tablename__ = 'passwords'
+    
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String)
+    website = Column(String)
+    password = Column(String) 
+    note = Column(String) 
