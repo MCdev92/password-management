@@ -2,24 +2,28 @@ from flask import Flask, request, jsonify
 from flask_restful import Api, Resource
 from database import SessionLocal
 from models import Passwords
+import bcrypt
 
 app = Flask(__name__)
 api = Api(app)
 
 class PasswordRes(Resource):
     def get(self, password_id):
-        # Retrieve a password by its ID
+         # Retrieve a password by its ID
         with SessionLocal() as db:
             password = db.query(Passwords).filter(Passwords.id == password_id).first()
             if password:
-                password_data = {
-                    'id': password.id,
-                    'username': password.username,
-                    'website': password.website,
-                    'password': password.password,
-                    'note': password.note
-                }
-                return jsonify(password_data)
+                provided_password = request.args.get("password")
+                if provided_password and bcrypt.checkpw(provided_password.encode('utf-8'), password.password):
+                    password_data = {
+                        'id': password.id,
+                        'username': password.username,
+                        'website': password.website,
+                        'note': password.note
+                    }
+                    return jsonify(password_data)
+                else:
+                    return jsonify({'message': 'Invalid password'}), 401
             else:
                 return jsonify({'message': 'Password not found'}), 404
 
@@ -36,11 +40,20 @@ class PasswordRes(Resource):
             if field not in data:
                 return jsonify({"message": f"'{field}' is a required field"}), 400
 
+        # Hash the password using bcrypt
+        hashed_password = bcrypt.hashpw(data["password"].encode('utf-8'), bcrypt.gensalt())
+        
         # Database Interaction
         with SessionLocal() as db:
-            new_password = Passwords(**data)
-            db.add(new_password)
-            db.commit()
+                new_password = Passwords(
+                    title=data["title"],
+                    username=data["username"],
+                    password=hashed_password,  # Store the hashed password
+                    website=data["website"],
+                    note=data.get("note")
+                )
+                db.add(new_password)
+                db.commit()
 
         return jsonify({"message": "Password created successfully"})
 
