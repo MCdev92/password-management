@@ -3,12 +3,11 @@ from flask_restful import Api, Resource
 from database import SessionLocal
 from models import Passwords
 from flask_bcrypt import Bcrypt
-from flask_cors import CORS
 
 app = Flask(__name__)
 api = Api(app)
-CORS(app)
 bcrypt = Bcrypt(app)
+
 
 class PasswordRes(Resource):
     def get(self, password_id):
@@ -95,8 +94,8 @@ class PasswordRes(Resource):
 
         return jsonify({"message": "Password deleted successfully"})
 
-
-@app.route('/passwords/')
+api.add_resource(PasswordRes, '/passwords/')
+@app.route('/passwords/', methods=['POST'])
 def index():
     return "Welcome to your password manager!"
 
