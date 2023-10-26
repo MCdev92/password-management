@@ -3,28 +3,26 @@ from flask_restful import Api, Resource
 from database import SessionLocal
 from models import Passwords
 from flask_bcrypt import Bcrypt
+from flask_cors import CORS
 
 app = Flask(__name__)
 api = Api(app)
+CORS(app)
 bcrypt = Bcrypt(app)
 
 class PasswordRes(Resource):
     def get(self, password_id):
-       # Retrieve a password by its ID
+   # Retrieve a password by its ID
         with SessionLocal() as db:
             password = db.query(Passwords).filter(Passwords.id == password_id).first()
             if password:
-                provided_password = request.args.get("password")
-                if provided_password and bcrypt.check_password_hash(password.password, provided_password):
-                    password_data = {
-                        'id': password.id,
-                        'username': password.username,
-                        'website': password.website,
-                        'note': password.note
-                    }
-                    return jsonify(password_data)
-                else:
-                    return jsonify({'message': 'Invalid password'}), 401
+                password_data = {
+                    'id': password.id,
+                    'username': password.username,
+                    'website': password.website,
+                    'note': password.note
+                }
+                return jsonify(password_data)
             else:
                 return jsonify({'message': 'Password not found'}), 404
 
@@ -36,7 +34,7 @@ class PasswordRes(Resource):
             return jsonify({"message": "No data provided in the request"}), 400
 
         # Data Validation
-        required_fields = ["title", "username", "password", "website"]
+        required_fields = ["username", "password", "website"]
         for field in required_fields:
             if field not in data:
                 return jsonify({"message": f"'{field}' is a required field"}), 400
@@ -47,7 +45,6 @@ class PasswordRes(Resource):
         # Database Interaction
         with SessionLocal() as db:
             new_password = Passwords(
-                title=data["title"],
                 username=data["username"],
                 password=hashed_password,  # Store the hashed password
                 website=data["website"],
@@ -66,7 +63,7 @@ class PasswordRes(Resource):
             return jsonify({"message": "No data provided in the request"}), 400
 
         # Data Validation
-        required_fields = ["title", "username", "password", "website"]
+        required_fields = ["username", "password", "website"]
         for field in required_fields:
             if field not in data:
                 return jsonify({"message": f"'{field}' is a required field"}), 400
@@ -99,7 +96,7 @@ class PasswordRes(Resource):
         return jsonify({"message": "Password deleted successfully"})
 
 
-@app.route('/')
+@app.route('/passwords/')
 def index():
     return "Welcome to your password manager!"
 
